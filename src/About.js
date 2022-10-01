@@ -1,11 +1,8 @@
 import React from 'react'
+import HeroSection from './components/HeroSection'
 
 const About = () => {
-  return (
-    <div>
-      
-    </div>
-  )
+  return <HeroSection/>;
 }
 
-export default About
+export default About;
