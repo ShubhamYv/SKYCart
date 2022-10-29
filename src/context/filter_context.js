@@ -13,6 +13,7 @@ const initialState = {
     text: "",
     category: "all",
     company: "all",
+    color: "all",
   },
 };
 
@@ -42,10 +43,6 @@ export const FilterContextProvider = ({ children }) => {
     let name = event.target.name;
     let value = event.target.value;
 
-    if (name === "company") {
-      value = event.target.value;
-    }
-
     return dispatch({ type: "UPDATE_FILTERS_VALUE", payload: { name, value } });
   };
 
@@ -68,7 +65,8 @@ export const FilterContextProvider = ({ children }) => {
         setListView,
         sorting,
         updateFilterValue,
-      }}>
+      }}
+    >
       {children}
     </FilterContext.Provider>
   );

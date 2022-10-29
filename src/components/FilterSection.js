@@ -1,20 +1,36 @@
-import React, { useState } from "react";
 import styled from "styled-components";
 import { useFilterContext } from "../context/filter_context";
-import { Button } from "../styles/Button";
+import { FaCheck } from "react-icons/fa";
 
 const FilterSection = () => {
   const {
-    filters: { text },
-    updateFiltersValue,
-
-    clearFilters,
+    filters: { text, category, color },
+    updateFilterValue,
+    all_products,
   } = useFilterContext();
 
-  // Here we need to get the unique property values based on the 2nd argument respective in an array so that we can use map and display on page
-  // const categories = uniqueValues(all_products, "category");
-  // const company = uniqueValues(all_products, "company");
-  // const colors = uniqueValues(all_products, "colors");
+  // get the unique values of each property
+  const getUniqueData = (data, attr) => {
+    let newVal = data.map((curElem) => {
+      return curElem[attr];
+    });
+
+    if (attr === "colors") {
+      // return (newVal = ["All", ...new Set([].concat(...newVal))]);
+      newVal = newVal.flat();
+    }
+
+    return (newVal = ["all", ...new Set(newVal)]);
+  };
+
+  // we need to have the individual data of each in an array format
+  const categoryData = getUniqueData(all_products, "category");
+  const companyData = getUniqueData(all_products, "company");
+  const colorsData = getUniqueData(all_products, "colors");
+  // console.log(
+  //   "🚀 ~ file: FilterSection.js ~ line 23 ~ FilterSection ~ companyData",
+  //   colorsData
+  // );
 
   return (
     <Wrapper>
@@ -25,26 +41,72 @@ const FilterSection = () => {
             name="text"
             placeholder="Search"
             value={text}
-            onChange={updateFiltersValue}
+            onChange={updateFilterValue}
           />
         </form>
       </div>
 
-      {/* <div className="filter-shipping">
-        <p>Free Shipping </p>
-        <input
-          type="checkbox"
-          name="shipping"
-          className="checkbox"
-          onChange={updateFilters}
-          checked={shipping}
-        />
-      </div> */}
+      <div className="filter-category">
+        <h3>Category</h3>
+        <div>
+          {categoryData.map((curElem, index) => {
+            return (
+              <button
+                key={index}
+                type="button"
+                name="category"
+                value={curElem}
+                className={curElem === category ? "active" : ""}
+                onClick={updateFilterValue}
+              >
+                {curElem}
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
-      <div className="filter-clear">
-        <Button className="btn" onClick={clearFilters}>
-          Clear Filters
-        </Button>
+      <div className="filter-company">
+        <h3>Company</h3>
+
+        <form action="#">
+          <select
+            name="company"
+            id="company"
+            className="filter-company--select"
+            onClick={updateFilterValue}
+          >
+            {companyData.map((curElem, index) => {
+              return (
+                <option key={index} value={curElem} name="company">
+                  {curElem}
+                </option>
+              );
+            })}
+          </select>
+        </form>
+      </div>
+
+      <div className="filter-colors colors">
+        <h3>Colors</h3>
+
+        <div className="filter-color-style">
+          {colorsData.map((curColor, index) => {
+            return (
+              <button
+                key={index}
+                type="button"
+                value={curColor}
+                name="color"
+                style={{ backgroundColor: curColor }}
+                className="btnStyle"
+                onClick={updateFilterValue}
+              >
+                {color === curColor ? "" : null}
+              </button>
+            );
+          })}
+        </div>
       </div>
     </Wrapper>
   );
